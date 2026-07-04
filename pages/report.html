@@ -20,22 +20,131 @@
                 <li><a href="about.html">About Us</a></li>
             </ul>
         </nav>
-        
+
         <h1 class="hero-title">Lost & Found</h1>
     </header>
 
     <!-- Lower Section: Actions & Messaging -->
     <main class="content-section">
 
+        <!-- ============================================================
+             APPS SCRIPT ENDPOINT — paste your web app URL (ends in /exec)
+             into SCRIPT_URL in the script below. This page always submits
+             items as type "Lost".
+             ============================================================ -->
+        <style>
+            .form-card {
+                max-width: 560px;
+                margin: 0 auto;
+                background-color: #0f2926;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 8px;
+                padding: 32px;
+                text-align: left;
+            }
+            .form-card h2 { text-align: center; margin-bottom: 8px; font-weight: 400; }
+            .form-card .sub { text-align: center; color: #a3b8b5; margin-bottom: 28px; font-size: 15px; }
+            .form-field { margin-bottom: 18px; display: flex; flex-direction: column; }
+            .form-field label { margin-bottom: 6px; font-size: 14px; color: #e0e0e0; }
+            .form-field input,
+            .form-field textarea {
+                background-color: #163a36;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 4px;
+                padding: 10px 12px;
+                color: #ffffff;
+                font-size: 15px;
+            }
+            .form-field textarea { resize: vertical; min-height: 90px; }
+            .form-field input:focus,
+            .form-field textarea:focus { outline: none; border-color: #f3e1d3; }
+            .form-submit {
+                width: 100%;
+                background-color: #f3e1d3;
+                color: #163a36;
+                padding: 12px;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                cursor: pointer;
+                margin-top: 8px;
+                transition: background-color 0.2s;
+            }
+            .form-submit:hover { background-color: #e5d2c4; }
+            .form-status { text-align: center; margin-top: 16px; min-height: 22px; font-size: 15px; }
+            .form-status.ok { color: #9fe0b0; }
+            .form-status.err { color: #f0a3a3; }
+        </style>
 
+        <form id="reportForm" class="form-card" autocomplete="off">
+            <h2>Report a Lost Item</h2>
+            <p class="sub">Tell us what you lost and how to reach you. We'll add it to the current items list.</p>
 
+            <div class="form-field">
+                <label for="item_name">Item name</label>
+                <input type="text" id="item_name" name="item_name" required maxlength="100" placeholder="e.g. Blue umbrella">
+            </div>
+            <div class="form-field">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" required maxlength="500" placeholder="Colour, brand, distinguishing details…"></textarea>
+            </div>
+            <div class="form-field">
+                <label for="location">Where you lost it</label>
+                <input type="text" id="location" name="location" required maxlength="120" placeholder="e.g. Library, 2nd floor">
+            </div>
+            <div class="form-field">
+                <label for="date">Date lost</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <div class="form-field">
+                <label for="contact">Your contact (email or phone)</label>
+                <input type="text" id="contact" name="contact" required maxlength="120" placeholder="you@example.com">
+            </div>
 
+            <button type="submit" class="form-submit">Submit Lost Report</button>
+            <p id="formStatus" class="form-status"></p>
+        </form>
 
+        <script>
+            // ===== FILL IN: Apps Script web app url (ends in /exec) =====
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzU9Ice6kLHelPazdBtFVD95nBeokHB-3GcRVaI5YP3YaqzNR5rNIqt8-xnEOIbnK-Ciw/exec";
+            const ITEM_TYPE = "Lost"; // this page always reports Lost items
+            // ============================================================
 
+            const form = document.getElementById("reportForm");
+            const statusEl = document.getElementById("formStatus");
 
-        
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                statusEl.className = "form-status";
+                statusEl.textContent = "Submitting…";
+
+                // URL-encoded body — Apps Script reads these as e.parameter.
+                const data = new URLSearchParams({
+                    type:        ITEM_TYPE,
+                    item_name:   form.item_name.value.trim(),
+                    description: form.description.value.trim(),
+                    location:    form.location.value.trim(),
+                    date:        form.date.value,
+                    contact:     form.contact.value.trim()
+                });
+
+                try {
+                    // no-cors: the request reaches the script, but we can't read
+                    // its response, so we report success optimistically.
+                    await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: data });
+                    form.reset();
+                    statusEl.className = "form-status ok";
+                    statusEl.textContent = "Thanks! Your lost item has been reported.";
+                } catch (err) {
+                    statusEl.className = "form-status err";
+                    statusEl.textContent = "Something went wrong — please try again.";
+                }
+            });
+        </script>
+
     </main>
-    
+
     <!-- Footer Section -->
     <footer class="site-footer">
         <p>&copy; 2026 Noodles Lost & Found. All rights reserved.</p>

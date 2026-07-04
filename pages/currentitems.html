@@ -20,22 +20,222 @@
                 <li><a href="about.html">About Us</a></li>
             </ul>
         </nav>
-        
+
         <h1 class="hero-title">Lost & Found</h1>
     </header>
 
     <!-- Lower Section: Actions & Messaging -->
     <main class="content-section">
 
+        <!-- ============================================================
+             DATA SOURCE — your Google Sheet published as CSV:
+               In the sheet: File > Share > Publish to web >
+               pick the sheet's tab > "Comma-separated values (.csv)"
+               > Publish, then copy the URL into CSV_URL below.
 
+             STATUS column: the "status" column in the sheet. "lost"
+             (or blank) shows the item here; "found" hides it (resolved).
 
+             COLUMNS: each value must match the exact header text in
+             row 1 of your sheet.
+             ============================================================ -->
+        <style>
+            .items-head { max-width: 1000px; margin: 0 auto 24px auto; }
+            .items-head h2 { font-weight: 400; margin-bottom: 6px; }
+            .items-head p { color: #a3b8b5; font-size: 15px; }
+            .items-controls {
+                max-width: 1000px;
+                margin: 0 auto 28px auto;
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .items-controls input,
+            .items-controls select {
+                background-color: #0f2926;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 4px;
+                padding: 10px 12px;
+                color: #ffffff;
+                font-size: 15px;
+            }
+            .items-controls input { flex: 1 1 260px; max-width: 400px; }
+            .items-grid {
+                max-width: 1000px;
+                margin: 0 auto;
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+            .item-card {
+                background-color: #0f2926;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 8px;
+                padding: 20px;
+                text-align: left;
+            }
+            .item-card .badge {
+                display: inline-block;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 3px 10px;
+                border-radius: 999px;
+                margin-bottom: 12px;
+            }
+            .item-card .badge.lost  { background-color: #5a2e2e; color: #ffd6d6; }
+            .item-card .badge.found { background-color: #2e5a3a; color: #d6ffe0; }
+            .item-card h3 { font-weight: 500; margin-bottom: 10px; }
+            .item-card p { color: #cfe0dd; font-size: 14px; margin-bottom: 8px; line-height: 1.4; }
+            .item-card .meta { color: #a3b8b5; font-size: 13px; }
+            .item-card .meta span { display: block; margin-top: 4px; }
+            .items-msg { text-align: center; color: #a3b8b5; margin-top: 30px; }
+        </style>
 
+        <div class="items-head">
+            <h2>Current Items</h2>
+            <p>Everything currently lost or found. Found your item? Contact the person listed on the card.</p>
+        </div>
 
+        <div class="items-controls">
+            <input type="search" id="searchBox" placeholder="Search items, descriptions, locations…">
+            <select id="typeFilter">
+                <option value="all">All items</option>
+                <option value="lost">Lost only</option>
+                <option value="found">Found only</option>
+            </select>
+        </div>
 
+        <div id="itemsGrid" class="items-grid"></div>
+        <p id="itemsMsg" class="items-msg">Loading items…</p>
 
-        
+        <script>
+            // ===== FILL IN: published CSV url =====
+            const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQdw5_aYw33sjztSgYkmvkmN-f9-opDC56Skw3JwMmehSCFlq9kdNoeTMckRe1HS6WXQxYR07Sa8gTA/pub?gid=0&single=true&output=csv";
+            // Exact header text (row 1) for each field in your sheet:
+            const COLUMNS = {
+                type:        "type",
+                item_name:   "item_name",
+                description: "description",
+                location:    "location",
+                date:        "date",
+                contact:     "contact",
+                status:      "status"
+            };
+            // ======================================
+
+            const grid = document.getElementById("itemsGrid");
+            const msg = document.getElementById("itemsMsg");
+            const searchBox = document.getElementById("searchBox");
+            const typeFilter = document.getElementById("typeFilter");
+            let allItems = [];
+
+            // Minimal CSV parser that handles quoted fields, commas and
+            // newlines inside quotes, and escaped double-quotes ("").
+            function parseCSV(text) {
+                const rows = [];
+                let row = [], field = "", inQuotes = false;
+                for (let i = 0; i < text.length; i++) {
+                    const c = text[i];
+                    if (inQuotes) {
+                        if (c === '"') {
+                            if (text[i + 1] === '"') { field += '"'; i++; }
+                            else inQuotes = false;
+                        } else field += c;
+                    } else if (c === '"') {
+                        inQuotes = true;
+                    } else if (c === ",") {
+                        row.push(field); field = "";
+                    } else if (c === "\n") {
+                        row.push(field); rows.push(row); row = []; field = "";
+                    } else if (c !== "\r") {
+                        field += c;
+                    }
+                }
+                if (field.length || row.length) { row.push(field); rows.push(row); }
+                return rows;
+            }
+
+            function rowsToObjects(rows) {
+                if (!rows.length) return [];
+                const headers = rows[0].map(h => h.trim());
+                return rows.slice(1)
+                    .filter(r => r.some(cell => cell.trim() !== ""))
+                    .map(r => {
+                        const obj = {};
+                        headers.forEach((h, i) => obj[h] = (r[i] || "").trim());
+                        return obj;
+                    });
+            }
+
+            function escapeHtml(s) {
+                return (s || "").replace(/[&<>"']/g, c => (
+                    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+                ));
+            }
+
+            function isActive(row) {
+                // status "lost" (or blank) = still active; "found" = resolved, hidden.
+                const s = (row[COLUMNS.status] || "").trim().toLowerCase();
+                return s === "" || s === "lost";
+            }
+
+            function typeOf(row) {
+                return (row[COLUMNS.type] || "").trim().toLowerCase().includes("found")
+                    ? "found" : "lost";
+            }
+
+            function render() {
+                const q = searchBox.value.trim().toLowerCase();
+                const t = typeFilter.value;
+                const visible = allItems.filter(row => {
+                    if (t !== "all" && typeOf(row) !== t) return false;
+                    if (!q) return true;
+                    return [COLUMNS.item_name, COLUMNS.description, COLUMNS.location]
+                        .some(k => (row[k] || "").toLowerCase().includes(q));
+                });
+
+                grid.innerHTML = visible.map(row => {
+                    const type = typeOf(row);
+                    return `
+                        <div class="item-card">
+                            <span class="badge ${type}">${type}</span>
+                            <h3>${escapeHtml(row[COLUMNS.item_name]) || "Untitled item"}</h3>
+                            <p>${escapeHtml(row[COLUMNS.description])}</p>
+                            <div class="meta">
+                                <span>📍 ${escapeHtml(row[COLUMNS.location]) || "—"}</span>
+                                <span>📅 ${escapeHtml(row[COLUMNS.date]) || "—"}</span>
+                                <span>✉️ ${escapeHtml(row[COLUMNS.contact]) || "—"}</span>
+                            </div>
+                        </div>`;
+                }).join("");
+
+                msg.textContent = visible.length ? "" : "No matching items right now.";
+            }
+
+            async function load() {
+                if (CSV_URL === "CSV_URL_HERE") {
+                    msg.textContent = "Set CSV_URL in this page to your published sheet.";
+                    return;
+                }
+                try {
+                    const res = await fetch(CSV_URL);
+                    const text = await res.text();
+                    allItems = rowsToObjects(parseCSV(text)).filter(isActive);
+                    render();
+                } catch (err) {
+                    msg.textContent = "Couldn't load items — check the CSV_URL.";
+                }
+            }
+
+            searchBox.addEventListener("input", render);
+            typeFilter.addEventListener("change", render);
+            load();
+        </script>
+
     </main>
-    
+
     <!-- Footer Section -->
     <footer class="site-footer">
         <p>&copy; 2026 Noodles Lost & Found. All rights reserved.</p>
