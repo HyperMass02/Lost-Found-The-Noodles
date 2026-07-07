@@ -10,18 +10,18 @@ body {
     color: #ffffff;
 }
 
-/* Hero Section with Background Image */
-.hero {
-    position: relative;
-    background-image: url('/images/Noodles_header_img.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 450px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px 50px;
-}
+        /* Hero Section with Background Image */
+        .hero {
+            position: relative;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.5)), url('../images/Noodles_header_img.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px 50px;
+        }
 
 /* Navigation Bar */
 .navbar {
@@ -186,6 +186,7 @@ body {
 }
 
 .team-member .contact {
+    margin-top: 15px;
     line-height: 1.5;
     font-size: 1rem;
 }
