@@ -14,7 +14,7 @@
         /* Hero Section with Background Image */
         .hero {
             position: relative;
-            background-image: url('/images/Noodles_header_img.jpg');
+            background-image: url('../images/Noodles_header_img.jpg');
             background-size: cover;
             background-position: center;
             height: 450px;
