@@ -1,190 +1,228 @@
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #1a433e;
+            color: #ffffff;
+        }
+
+        /* Hero Section with Background Image */
+        .hero {
+            position: relative;
+            background-image: url('../images/Noodles_header_img.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px 50px;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Placeholder icon matching the logo icon */
+        .logo::before {
+            content: "🍜"; 
+            font-size: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Hero Centered Heading */
+        .hero-title {
+            font-size: 48px;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 120px; /* Adjust layout alignment */
+            letter-spacing: 1px;
+        }
+
+        /* Main Content Section */
+        .content-section {
+            background-color: #163a36; /* Dark teal background */
+            text-align: center;
+            padding: 40px 20px 80px 20px;
+        }
+
+        .tagline {
+            font-size: 18px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            color: #e0e0e0;
+        }
+
+        /* Button Container */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 150px; /* Generous gap between buttons */
+            margin-top: 20px;
+        }
+
+        /* Styled Buttons */
+        .btn {
+            background-color: #f3e1d3; /* Soft cream color */
+            color: #163a36; /* Dark teal text color */
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn:hover {
+            background-color: #e5d2c4;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Responsive handling */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .btn-container {
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+            }
+            .hero-title {
+                margin-bottom: 60px;
+            }
+        }
+
+        /* --- Footer Section Styles --- */
+        .site-footer {
+            background-color: #0f2926; /* Slightly darker shade of teal for contrast */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #a3b8b5;
+            flex-shrink: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #a3b8b5;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Responsive handling */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .btn-container {
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+            }
+            .hero-title {
+                margin-bottom: 60px;
+            }
+            .site-footer {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                padding: 30px 20px;
+            }
+        }
+        .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-body {
-    background-color: #1a433e;
-    color: #ffffff;
-}
-
-/* Hero Section with Background Image */
-.hero {
-    position: relative;
-    background-image: url('/images/Noodles_header_img.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    background-attachment: relative;
-    height: 450px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px 50px;
-}
-
-/* Navigation Bar */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Placeholder icon matching the logo icon */
-.logo::before {
-    content: "🍜"; 
-    font-size: 20px;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 25px;
-}
-
-.nav-links a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 16px;
-    transition: opacity 0.2s;
-}
-
-.nav-links a:hover {
-    opacity: 0.8;
-}
-
-/* Hero Centered Heading */
-.hero-title {
-    font-size: 48px;
-    font-weight: 400;
+.team-member {
     text-align: center;
-    margin-bottom: 120px; /* Adjust layout alignment */
-    letter-spacing: 1px;
+    padding: 20px;
+    border-radius: 10px;
 }
 
-/* Main Content Section */
-.content-section {
-    background-color: #163a36; /* Dark teal background */
-    text-align: center;
-    padding: 40px 20px 80px 20px;
+.team-member img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 20%;
+    margin-bottom: 15px;
 }
 
-.tagline {
-    font-size: 18px;
-    font-weight: 300;
-    margin-bottom: 40px;
-    color: #e0e0e0;
+.team-member h3 {
+    margin: 10px 0;
+    font-size: 1.5rem;
 }
 
-/* Button Container */
-.btn-container {
-    display: flex;
-    justify-content: center;
-    gap: 150px; /* Generous gap between buttons */
-    margin-top: 20px;
+.team-member .description {
+    line-height: 1.5;
+    font-size: 1rem;
 }
-
-/* Styled Buttons */
-.btn {
-    background-color: #f3e1d3; /* Soft cream color */
-    color: #163a36; /* Dark teal text color */
-    padding: 12px 30px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.2s, transform 0.1s;
-}
-
-.btn:hover {
-    background-color: #e5d2c4;
-}
-
-.btn:active {
-    transform: scale(0.98);
-}
-
-/* Responsive handling */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
-    .btn-container {
-        flex-direction: column;
-        gap: 20px;
-        align-items: center;
-    }
-    .hero-title {
-        margin-bottom: 60px;
-    }
-}
-/* --- Footer Section Styles --- */
-.site-footer {
-    background-color: #0f2926; /* Slightly darker shade of teal for contrast */
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 30px 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    color: #a3b8b5;
-    flex-shrink: 0;
-}
-.footer-links {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-}
-.footer-links a {
-    color: #a3b8b5;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-.footer-links a:hover {
-    color: #ffffff;
-}
-/* Responsive handling */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
-    .btn-container {
-        flex-direction: column;
-        gap: 20px;
-        align-items: center;
-    }
-    .hero-title {
-        margin-bottom: 60px;
-    }
-    .site-footer {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-        padding: 30px 20px;
-    }
+.team-member .contact {
+    line-height: 1.5;
+    font-size: 1rem;
 }
