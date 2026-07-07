@@ -85,7 +85,7 @@ body {
 .content-section {
     background-color: #163a36; /* Dark teal background */
     text-align: center;
-    padding: 40px 20px 80px 20px;
+    padding: 40px 20px 0 20px;
 }
 
 .tagline {
