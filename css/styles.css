@@ -127,7 +127,7 @@ body {
 .site-footer {
     background-color: #0f2926; /* Slightly darker shade of teal for contrast */
     border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 30px 50px;
+    padding: 30px 50px 0px 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
