@@ -176,9 +176,10 @@
             }
 
             function isActive(row) {
-                // status "lost" (or blank) = still active; "found" = resolved, hidden.
+                // resolved statuses are hidden; everything else (open, lost, blank) is active.
                 const s = (row[COLUMNS.status] || "").trim().toLowerCase();
-                return s === "" || s === "lost";
+                const resolved = ["found", "closed", "resolved", "returned"];
+                return !resolved.includes(s);
             }
 
             function typeOf(row) {
