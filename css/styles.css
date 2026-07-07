@@ -17,7 +17,7 @@
             background-image: url('../images/Noodles_header_img.jpg');
             background-size: cover;
             background-position: center;
-            height: 450px;
+            height: 350px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
