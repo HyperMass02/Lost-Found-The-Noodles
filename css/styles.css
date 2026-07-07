@@ -80,13 +80,12 @@ body {
     letter-spacing: 1px;
 }
 
-        /* Main Content Section */
-        .content-section {
-            background-color: #163a36; /* Dark teal background */
-            text-align: center;
-            height: 250px;
-            padding: 40px 20px 80px 20px;
-        }
+/* Main Content Section */
+.content-section {
+    background-color: #163a36; /* Dark teal background */
+    text-align: center;
+    padding: 40px 20px 80px 20px;
+}
 
 .tagline {
     font-size: 18px;
